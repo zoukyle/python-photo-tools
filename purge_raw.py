@@ -29,7 +29,12 @@ def main():
     sys.exit(1)
 
   jpg_files = glob.glob('%s/*.JPG' % folder)
+  if not jpg_files:
+    print('No JPG files found in folder %s' % folder)
+    sys.exit(1)
+
   cr2_files = glob.glob('%s/*.CR2' % folder)
+  deleted_files = []
   for cr2_file in cr2_files:
     filename_base = cr2_file.split('.')[0]
     if ('%s.JPG' % filename_base in jpg_files or
@@ -37,6 +42,9 @@ def main():
       continue
     print('%s deleted' % cr2_file)
     os.remove(cr2_file)
+    deleted_files.append(cr2_file)
+  if not deleted_files:
+    print('No RAW file was deleted')
 
 
 if __name__ == '__main__':
