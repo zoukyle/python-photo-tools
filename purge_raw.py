@@ -29,21 +29,29 @@ def main():
     sys.exit(1)
 
   jpg_files = glob.glob('%s/*.JPG' % folder)
-  if not jpg_files:
-    print('No JPG files found in folder %s' % folder)
+  if not os.path.exists(folder):
+    print('Folder %s does not exist.' % folder)
     sys.exit(1)
 
   cr2_files = glob.glob('%s/*.CR2' % folder)
-  deleted_files = []
+  delete_files = []
   for cr2_file in cr2_files:
-    filename_base = cr2_file.split('.')[0]
+    filename_base = cr2_file.split('.CR2')[0]
     if ('%s.JPG' % filename_base in jpg_files or
         '%s.jpg' % filename_base in jpg_files):
       continue
-    print('%s deleted' % cr2_file)
-    os.remove(cr2_file)
-    deleted_files.append(cr2_file)
-  if not deleted_files:
+    delete_files.append(cr2_file)
+  if not delete_files:
+    print('No RAW file was deleted')
+    sys.exit(0)
+
+  user_input = input('The following RAW files will be deleted:\n%s\ny/N?'
+                     % '\n'.join(delete_files))
+  if user_input == 'y':
+    for delete_file in delete_files:
+      print('%s deleted' % delete_file)
+      os.remove(delete_file)
+  else:
     print('No RAW file was deleted')
 
 
