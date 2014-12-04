@@ -45,8 +45,8 @@ def main():
     print('No RAW file was deleted')
     sys.exit(0)
 
-  user_input = input('The following RAW files will be deleted:\n%s\ny/N?'
-                     % '\n'.join(delete_files))
+  user_input = raw_input('The following RAW files will be deleted:\n%s\n?'
+                         % '\n'.join(delete_files))
   if user_input == 'y':
     for delete_file in delete_files:
       print('%s deleted' % delete_file)
