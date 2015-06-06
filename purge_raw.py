@@ -43,16 +43,17 @@ def main():
     delete_files.append(cr2_file)
   if not delete_files:
     print('No RAW file was deleted')
-    sys.exit(0)
-
-  user_input = raw_input('The following RAW files will be deleted:\n%s\n?'
-                         % '\n'.join(delete_files))
-  if user_input == 'y':
-    for delete_file in delete_files:
-      print('%s deleted' % delete_file)
-      os.remove(delete_file)
   else:
-    print('No RAW file was deleted')
+    user_input = raw_input('The following RAW files will be deleted:\n%s\n?'
+                           % '\n'.join(delete_files))
+    if user_input == 'y':
+      for delete_file in delete_files:
+        print('%s deleted' % delete_file)
+        os.remove(delete_file)
+    else:
+      print('No RAW file was deleted')
+  if not os.path.exists('%s/meta.txt' % folder):
+    print('!!!WARNING: NO meta.txt FILD FOUND. MUST CREATE ONE!!!')
 
 
 if __name__ == '__main__':
