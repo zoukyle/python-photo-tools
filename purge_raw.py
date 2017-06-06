@@ -1,3 +1,4 @@
+#!/bin/python
 """A command line tool to purge raw images which are missing corresponding JPGs.
 """
 import getopt
