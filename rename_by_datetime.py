@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import argparse
 
 from PIL import Image
@@ -24,7 +26,7 @@ def main():
   hash_table = dict()
 
   for eachfile in files:
-    if eachfile.lower().endswith('cr2'):
+    if not eachfile.lower().endswith('jpg'):
       continue
 
     # metadata = pyexiv2.ImageMetadata(os.path.join(folder, eachfile))
