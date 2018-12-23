@@ -7,6 +7,7 @@ from PIL.ExifTags import TAGS
 import sys
 import os
 import datetime
+import time
 
 parser = argparse.ArgumentParser(
     description='Rename folder pictures by datetime')
@@ -34,6 +35,11 @@ def main():
     img = Image.open(os.path.join(folder, eachfile))
     exif_data = img._getexif()
     timestamp = exif_data[36867]
+    datetime_obj = datetime.datetime.strptime(timestamp, '%Y:%m:%d %H:%M:%S')
+    timestamp = time.mktime(datetime_obj.timetuple())
+    # if eachfile.lower().startswith('641d'):
+    #   timestamp += 300
+
     if timestamp in hash_table:
       hash_table[timestamp].append(eachfile)
     else:
