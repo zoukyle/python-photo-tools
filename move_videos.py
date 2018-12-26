@@ -34,7 +34,8 @@ def main():
   files = os.listdir(folder)
 
   for eachfile in files:
-    if not eachfile.lower().endswith('mov'):
+    if (not eachfile.lower().endswith('mov')
+        and not eachfile.lower().endswith('mp4')):
       continue
 
     # Ensures the folder exists in ~/Videos
