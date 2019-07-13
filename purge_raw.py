@@ -34,14 +34,23 @@ def main():
     print('Folder %s does not exist.' % folder)
     sys.exit(1)
 
-  cr2_files = glob.glob('%s/*.CR2' % folder)
+  raw_file_extensions = ['CR2', 'ARW']
   delete_files = []
-  for cr2_file in cr2_files:
-    filename_base = cr2_file.split('.CR2')[0]
-    if ('%s.JPG' % filename_base in jpg_files or
-        '%s.jpg' % filename_base in jpg_files):
-      continue
-    delete_files.append(cr2_file)
+  for jpg_file in jpg_files:
+    ####UPDATE
+    print(jpg_file)
+    stem_name = os.path.basename(jpg_file)
+    if stem_name.startswith('C') and len(stem_name.split('T')) == 2:
+      delete_files.append(jpg_file)
+
+  for raw_file_extension in raw_file_extensions:
+    raw_files = glob.glob('%s/*.%s' % (folder, raw_file_extension))
+    for raw_file in raw_files:
+      filename_base = raw_file.split('.%s' % raw_file_extension)[0]
+      if ('%s.JPG' % filename_base in jpg_files or
+          '%s.jpg' % filename_base in jpg_files):
+        continue
+      delete_files.append(raw_file)
   if not delete_files:
     print('No RAW file was deleted')
   else:
