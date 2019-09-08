@@ -9,6 +9,7 @@ import sys
 import base
 import file_utils
 import flags
+import move_videos
 
 parser = argparse.ArgumentParser(
     parents=[flags.common_parser],
@@ -16,10 +17,18 @@ parser = argparse.ArgumentParser(
         'Purge raw files from the disk if there is not a corresponding '
         'JPG file.\nUsage example:\n'
         '  purge_raw.py -f folder-name (2019-07-21 or "2019-07*")'))
-args = parser.parse_args()
+parser.add_argument('--nomove_videos',
+                    action='store_true',
+                    help='Also move videos to its own folder.')
+parser.add_argument('--force',
+                    action='store_true',
+                    help='Run without user confirmation.')
 
 
 class RawFilePurger(base.ProcessorBase):
+
+    def __init__(self, args):
+        self._args = args
 
     def run(self, folder):
         jpg_files = glob.glob('%s/*.JPG' % folder)
@@ -27,7 +36,7 @@ class RawFilePurger(base.ProcessorBase):
             print('Folder %s does not exist.' % folder)
             sys.exit(1)
 
-        raw_file_extensions = ['CR2', 'ARW']
+        raw_file_extensions = ['CR2', 'ARW', 'xmp']
         delete_files = []
         for jpg_file in jpg_files:
             ####UPDATE
@@ -47,9 +56,12 @@ class RawFilePurger(base.ProcessorBase):
         if not delete_files:
             print('No RAW file was deleted')
         else:
-            user_input = raw_input(
-                'The following RAW files will be deleted:\n%s\n?' %
-                '\n'.join(delete_files))
+            if self._args.force:
+                user_input = 'y'
+            else:
+                user_input = raw_input(
+                    'The following RAW files will be deleted:\n%s\n?' %
+                    '\n'.join(delete_files))
             if user_input == 'y':
                 for delete_file in delete_files:
                     print('%s deleted' % delete_file)
@@ -61,4 +73,7 @@ class RawFilePurger(base.ProcessorBase):
 
 
 if __name__ == '__main__':
-    base.main(args.folder, RawFilePurger())
+    args = parser.parse_args()
+    base.main(args.folder, RawFilePurger(args))
+    if not args.nomove_videos:
+        base.main(args.folder, move_videos.VideosMover(args))

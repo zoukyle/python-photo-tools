@@ -24,11 +24,13 @@ parser.add_argument('videos_dst_folder',
                     nargs='?',
                     default='/cygdrive/d/Videos/',
                     help='The videos destination folder.')
-args = parser.parse_args()
 
 
 class VideosMover(base.ProcessorBase):
     """The class the move videos."""
+
+    def __init__(self, args):
+        self._args = args
 
     def run(self, folder):
         """Runs the function to move the videos.
@@ -44,7 +46,7 @@ class VideosMover(base.ProcessorBase):
                 continue
 
             # Ensures the folder exists in ~/Videos
-            expected_dir = os.path.join(args.videos_dst_folder, folder)
+            expected_dir = os.path.join(self._args.videos_dst_folder, folder)
             if not os.path.exists(expected_dir):
                 os.mkdir(expected_dir)
 
@@ -54,4 +56,5 @@ class VideosMover(base.ProcessorBase):
 
 
 if __name__ == '__main__':
-    base.main(args.folder, VideosMover())
+    args = parser.parse_args()
+    base.main(args.folder, VideosMover(args))
