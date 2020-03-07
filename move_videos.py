@@ -54,6 +54,9 @@ class VideosMover(base.ProcessorBase):
             print('moving %s to %s' % (eachfile, new_file_path))
             if not self._args.dry_run:
                 shutil.move(os.path.join(folder, eachfile), new_file_path)
+                modd_file = os.path.join(folder, '{}.modd'.format(eachfile))
+                if os.path.exists(modd_file):
+                    shutil.move(modd_file, '{}.modd'.format(new_file_path))
 
         # Delete the folder if it's empty
         self._file_utils.delete_folder_if_empty(folder)
