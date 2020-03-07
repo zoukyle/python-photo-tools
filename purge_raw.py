@@ -12,7 +12,8 @@ import flags
 import move_videos
 
 parser = argparse.ArgumentParser(
-    parents=[flags.common_parser],
+    parents=[move_videos.parser],
+    add_help=False,
     description=(
         'Purge raw files from the disk if there is not a corresponding '
         'JPG file.\nUsage example:\n'
@@ -28,7 +29,7 @@ parser.add_argument('--force',
 class RawFilePurger(base.ProcessorBase):
 
     def __init__(self, args):
-        self._args = args
+        super(RawFilePurger, self).__init__(args)
 
     def run(self, folder):
         jpg_files = glob.glob('%s/*.JPG' % folder)
@@ -65,10 +66,15 @@ class RawFilePurger(base.ProcessorBase):
             if user_input == 'y':
                 for delete_file in delete_files:
                     print('%s deleted' % delete_file)
-                    os.remove(delete_file)
+                    if not self._args.dry_run:
+                        os.remove(delete_file)
             else:
                 print('No RAW file was deleted')
-        if not os.path.exists('%s/meta.txt' % folder):
+
+        # Delete the folder if it's empty
+        folder_deleted = self._file_utils.delete_folder_if_empty(folder)
+
+        if not folder_deleted and not os.path.exists('%s/meta.txt' % folder):
             print('!!!WARNING: NO meta.txt FILD FOUND. MUST CREATE ONE!!!')
 
 

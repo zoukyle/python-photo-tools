@@ -2,7 +2,7 @@
 
 import argparse
 
-common_parser = argparse.ArgumentParser(add_help=False)
+common_parser = argparse.ArgumentParser(add_help=True)
 common_parser.add_argument(
     '-f',
     '--folder',
@@ -14,5 +14,5 @@ common_parser.add_argument(
 common_parser.add_argument('--dry_run',
                            dest='dry_run',
                            action='store_true',
-                           help='Dry run without renaming')
+                           help='Dry run without executing')
 common_parser.add_argument('--nodry_run', dest='dry_run', action='store_false')

@@ -15,13 +15,13 @@ import flags
 
 parser = argparse.ArgumentParser(
     parents=[flags.common_parser],
+    add_help=False,
     description=('Move video files from the Pictures folder to the Videos '
                  'folder.\n'
                  'Usage example:\n'
                  '  move_videos.py -f folder-name (2019-07-21 or "2019-07*")'))
-parser.add_argument('videos_dst_folder',
+parser.add_argument('--videos_dst_folder',
                     type=str,
-                    nargs='?',
                     default='/cygdrive/d/Videos/',
                     help='The videos destination folder.')
 
@@ -30,7 +30,7 @@ class VideosMover(base.ProcessorBase):
     """The class the move videos."""
 
     def __init__(self, args):
-        self._args = args
+        super(VideosMover, self).__init__(args)
 
     def run(self, folder):
         """Runs the function to move the videos.
@@ -52,7 +52,12 @@ class VideosMover(base.ProcessorBase):
 
             new_file_path = os.path.join(expected_dir, eachfile)
             print('moving %s to %s' % (eachfile, new_file_path))
-            shutil.move(os.path.join(folder, eachfile), new_file_path)
+            if not self._args.dry_run:
+                shutil.move(os.path.join(folder, eachfile), new_file_path)
+
+        # Delete the folder if it's empty
+        self._file_utils.delete_folder_if_empty(folder)
+
 
 
 if __name__ == '__main__':
