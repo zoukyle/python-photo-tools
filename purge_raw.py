@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser(
     description=(
         'Purge raw files from the disk if there is not a corresponding '
         'JPG file.\nUsage example:\n'
-        '  purge_raw.py -f folder-name (2019-07-21 or "2019-07*")'))
+        '  purge_raw.py -f folder-name (2019-07-21 or "2019-07*").'))
 parser.add_argument('--nomove_videos',
                     action='store_true',
                     help='Also move videos to its own folder.')
