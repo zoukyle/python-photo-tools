@@ -50,10 +50,14 @@ class VideosMover(base.ProcessorBase):
             if not os.path.exists(expected_dir):
                 os.mkdir(expected_dir)
 
+            current_file_path = os.path.join(os.getcwd(), folder, eachfile)
             new_file_path = os.path.join(expected_dir, eachfile)
-            print('moving %s to %s' % (eachfile, new_file_path))
+            if current_file_path == new_file_path:
+              continue
+
+            print('moving %s to %s' % (current_file_path, new_file_path))
             if not self._args.dry_run:
-                shutil.move(os.path.join(folder, eachfile), new_file_path)
+                shutil.move(current_file_path, new_file_path)
                 modd_file = os.path.join(folder, '{}.modd'.format(eachfile))
                 if os.path.exists(modd_file):
                     shutil.move(modd_file, '{}.modd'.format(new_file_path))

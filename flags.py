@@ -2,7 +2,7 @@
 
 import argparse
 
-common_parser = argparse.ArgumentParser(add_help=True)
+common_parser = argparse.ArgumentParser(add_help=False)
 common_parser.add_argument(
     '-f',
     '--folder',

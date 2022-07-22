@@ -24,6 +24,10 @@ parser.add_argument('--nomove_videos',
 parser.add_argument('--force',
                     action='store_true',
                     help='Run without user confirmation.')
+parser.add_argument('-m', '--meta', type=str,
+                    help='Meta string to be put in the meta.txt file.')
+
+META_TXT_FILE = 'meta.txt'
 
 
 class RawFilePurger(base.ProcessorBase):
@@ -32,12 +36,18 @@ class RawFilePurger(base.ProcessorBase):
         super(RawFilePurger, self).__init__(args)
 
     def run(self, folder):
-        jpg_files = glob.glob('%s/*.JPG' % folder)
         if not os.path.exists(folder):
-            print('Folder %s does not exist.' % folder)
+            print('FATAL: Folder %s does not exist.' % folder)
             sys.exit(1)
 
-        raw_file_extensions = ['CR2', 'ARW', 'xmp']
+        meta_file_path = os.path.join(folder, META_TXT_FILE)
+        if not os.path.exists(meta_file_path) and not self._args.meta:
+          print('FATAL: --meta string is required to be written as a meta txt '
+                'file')
+          sys.exit(1)
+
+        jpg_files = glob.glob('%s/*.JPG' % folder)
+        raw_file_extensions = ['CR2', 'ARW', 'xmp', 'moff', 'modd']
         delete_files = []
         for jpg_file in jpg_files:
             ####UPDATE
@@ -74,8 +84,14 @@ class RawFilePurger(base.ProcessorBase):
         # Delete the folder if it's empty
         folder_deleted = self._file_utils.delete_folder_if_empty(folder)
 
-        if not folder_deleted and not os.path.exists('%s/meta.txt' % folder):
-            print('!!!WARNING: NO meta.txt FILD FOUND. MUST CREATE ONE!!!')
+        if not folder_deleted and not os.path.exists(meta_file_path):
+            if not self._args.meta:
+                print('!!!WARNING: NO meta.txt FILD FOUND. MUST CREATE ONE!!!')
+            else:
+                with open(meta_file_path, 'w') as f:
+                    f.write(self._args.meta)
+                    f.close()
+                print('{} file created'.format(meta_file_path))
 
 
 if __name__ == '__main__':
