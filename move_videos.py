@@ -22,7 +22,7 @@ parser = argparse.ArgumentParser(
                  '  move_videos.py -f folder-name (2019-07-21 or "2019-07*")'))
 parser.add_argument('--videos_dst_folder',
                     type=str,
-                    default='/cygdrive/d/Videos/',
+                    default='/cygdrive/d/liangzou/Videos/',
                     help='The videos destination folder.')
 
 

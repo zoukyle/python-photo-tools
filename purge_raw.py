@@ -70,7 +70,7 @@ class RawFilePurger(base.ProcessorBase):
             if self._args.force:
                 user_input = 'y'
             else:
-                user_input = raw_input(
+                user_input = input(
                     'The following RAW files will be deleted:\n%s\n?' %
                     '\n'.join(delete_files))
             if user_input == 'y':
